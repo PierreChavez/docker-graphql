@@ -1,8 +1,8 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Check code
+      uses: actions/checkout@v4
+    
+      with:
+       fetch-depth: 0
+    - name : Docker login
+      run: |
+        echo "Iniciando Login To Docker Hub" 
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        echo "Login To Docker Hub Success"
